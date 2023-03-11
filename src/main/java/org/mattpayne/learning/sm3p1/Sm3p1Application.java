@@ -60,6 +60,7 @@ public class Sm3p1Application implements CommandLineRunner {
 
     }
 //end::snippetA[]
+     */
 
     //tag::snippetB[]
     @Configuration
@@ -80,7 +81,6 @@ public class Sm3p1Application implements CommandLineRunner {
 
     }
 //end::snippetB[]
-     */
 
     //tag::snippetC[]
     public static class Order {
