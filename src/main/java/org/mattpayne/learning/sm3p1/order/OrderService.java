@@ -1,13 +1,14 @@
 package org.mattpayne.learning.sm3p1.order;
 
+import java.util.List;
+import org.mattpayne.learning.sm3p1.util.NotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.mattpayne.learning.sm3p1.util.NotFoundException;
 
-import java.util.List;
 
 @Service
 public class OrderService {
+
     private final OrderRepository orderRepository;
 
     public OrderService(final OrderRepository orderRepository) {
@@ -44,14 +45,15 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
-    private Order mapToEntity(final OrderDTO orderDTO, final Order order) {
-        order.setState(orderDTO.getState());
-        return order;
-    }
-
     private OrderDTO mapToDTO(final Order order, final OrderDTO orderDTO) {
         orderDTO.setId(order.getId());
         orderDTO.setState(order.getState());
         return orderDTO;
     }
+
+    private Order mapToEntity(final OrderDTO orderDTO, final Order order) {
+        order.setState(orderDTO.getState());
+        return order;
+    }
+
 }
