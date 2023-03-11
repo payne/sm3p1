@@ -1,5 +1,6 @@
 package org.mattpayne.learning.sm3p1;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,15 +13,17 @@ import org.springframework.statemachine.config.builders.StateMachineStateConfigu
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 import org.springframework.statemachine.recipes.persist.PersistStateMachineHandler;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.statemachine.state.State;
 
 
 @SpringBootApplication
-public class Sm3p1Application {
+public class Sm3p1Application implements CommandLineRunner {
 
 
+    @Autowired
+    private StateMachine<String, String> stateMachine;
 
-
-
+    /*
     //tag::snippetA[]
     @Configuration
     @EnableStateMachine
@@ -77,6 +80,7 @@ public class Sm3p1Application {
 
     }
 //end::snippetB[]
+     */
 
     //tag::snippetC[]
     public static class Order {
@@ -96,12 +100,26 @@ public class Sm3p1Application {
     }
 //end::snippetC[]
 
+
 //     public static void main(String[] args) throws Exception {
 //         Bootstrap.main(args);
 //    }
 
     public static void main(final String[] args) {
         SpringApplication.run(Sm3p1Application.class, args);
+    }
+    @Override
+    public void run(String... args) throws Exception {
+        stateMachine.start();
+        stateMachine.sendEvent("PROCESS");
+        stateMachine.sendEvent("SEND");
+        stateMachine.sendEvent("DELIVER");
+
+        State<String, String> currentState = stateMachine.getState();
+        System.out.println("Current state: " + currentState.getId());
+
+        stateMachine.stop();
+
     }
 
 }
