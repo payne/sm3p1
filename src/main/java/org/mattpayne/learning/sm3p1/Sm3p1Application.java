@@ -23,6 +23,9 @@ public class Sm3p1Application implements CommandLineRunner {
     @Autowired
     private StateMachine<String, String> stateMachine;
 
+    @Autowired
+    private Persist persist;
+
     /*
     //tag::snippetA[]
     @Configuration
@@ -83,21 +86,6 @@ public class Sm3p1Application implements CommandLineRunner {
 //end::snippetB[]
 
     //tag::snippetC[]
-    public static class Order {
-        int id;
-        String state;
-
-        public Order(int id, String state) {
-            this.id = id;
-            this.state = state;
-        }
-
-        @Override
-        public String toString() {
-            return "Order [id=" + id + ", state=" + state + "]";
-        }
-
-    }
 //end::snippetC[]
 
 
@@ -110,6 +98,12 @@ public class Sm3p1Application implements CommandLineRunner {
     }
     @Override
     public void run(String... args) throws Exception {
+
+        // persist.listDbEntries();
+
+
+    }
+   public void runOLD(String... args) throws Exception {
         stateMachine.start();
         stateMachine.sendEvent("PROCESS");
         stateMachine.sendEvent("SEND");
