@@ -99,7 +99,14 @@ public class Sm3p1Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        // persist.listDbEntries();
+        stateMachine.start();
+        stateMachine.sendEvent("PROCESS");
+        stateMachine.sendEvent("SEND");
+        stateMachine.sendEvent("DELIVER");
+
+        State<String, String> currentState = stateMachine.getState();
+        System.out.println("Current state: " + currentState.getId());
+        persist.listDbEntries();
 
 
     }
