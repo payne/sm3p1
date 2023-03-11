@@ -1,5 +1,7 @@
 package org.mattpayne.learning.sm3p1;
 
+import org.mattpayne.learning.sm3p1.order.OrderDTO;
+import org.mattpayne.learning.sm3p1.order.OrderService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,46 +28,10 @@ public class Sm3p1Application implements CommandLineRunner {
     @Autowired
     private Persist persist;
 
-    /*
-    //tag::snippetA[]
-    @Configuration
-    @EnableStateMachine
-    static class StateMachineConfig
-            extends StateMachineConfigurerAdapter<String, String> {
+    @Autowired
+    private OrderService orderService;
 
-        @Override
-        public void configure(StateMachineStateConfigurer<String, String> states)
-                throws Exception {
-            states
-                    .withStates()
-                    .initial("PLACED")
-                    .state("PROCESSING")
-                    .state("SENT")
-                    .state("DELIVERED");
-        }
 
-        @Override
-        public void configure(StateMachineTransitionConfigurer<String, String> transitions)
-                throws Exception {
-            transitions
-                    .withExternal()
-                    .source("PLACED").target("PROCESSING")
-                    .event("PROCESS")
-                    .and()
-                    .withExternal()
-                    .source("PROCESSING").target("SENT")
-                    .event("SEND")
-                    .and()
-                    .withExternal()
-                    .source("SENT").target("DELIVERED")
-                    .event("DELIVER");
-        }
-
-    }
-//end::snippetA[]
-     */
-
-    //tag::snippetB[]
     @Configuration
     static class PersistHandlerConfig {
 
@@ -83,21 +49,25 @@ public class Sm3p1Application implements CommandLineRunner {
         }
 
     }
-//end::snippetB[]
-
-    //tag::snippetC[]
-//end::snippetC[]
-
-
-//     public static void main(String[] args) throws Exception {
-//         Bootstrap.main(args);
-//    }
 
     public static void main(final String[] args) {
         SpringApplication.run(Sm3p1Application.class, args);
     }
     @Override
     public void run(String... args) throws Exception {
+
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setState("PROCESS");
+        Long id = orderService.create(orderDTO);
+        orderDTO = orderService.get(id);
+        persist.change(id, "PROCESS");
+        String msg = persist.listDbEntries();
+        System.out.println(msg);
+
+        persist.change(id, "SEND");
+        System.out.println(persist.listDbEntries());
+    }
+        public void runOLD(String... args) throws Exception {
 
         stateMachine.start();
         stateMachine.sendEvent("PROCESS");
@@ -110,7 +80,7 @@ public class Sm3p1Application implements CommandLineRunner {
 
 
     }
-   public void runOLD(String... args) throws Exception {
+   public void runOLDer(String... args) throws Exception {
         stateMachine.start();
         stateMachine.sendEvent("PROCESS");
         stateMachine.sendEvent("SEND");
