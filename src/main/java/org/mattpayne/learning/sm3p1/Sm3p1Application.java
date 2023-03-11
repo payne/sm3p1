@@ -63,9 +63,13 @@ public class Sm3p1Application implements CommandLineRunner {
         persist.change(id, "PROCESS");
         String msg = persist.listDbEntries();
         System.out.println(msg);
+        State<String, String> currentState = stateMachine.getState();
+        System.out.println("Current state: " + currentState.getId());
 
         persist.change(id, "SEND");
         System.out.println(persist.listDbEntries());
+                currentState = stateMachine.getState();
+        System.out.println("Current state: " + currentState.getId());
     }
         public void runOLD(String... args) throws Exception {
 
