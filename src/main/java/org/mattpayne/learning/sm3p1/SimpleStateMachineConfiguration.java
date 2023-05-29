@@ -13,29 +13,31 @@ import org.springframework.statemachine.state.State;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import static org.mattpayne.learning.sm3p1.OrderState.*;
+
 @Configuration
 @EnableStateMachine(name = "simpleStateMachine")
 public class SimpleStateMachineConfiguration {
 
 
     @Bean
-    public StateMachine<String, String> stateMachine(StateMachineListener<String, String> listener) throws Exception {
-        StateMachineBuilder.Builder<String, String> builder = StateMachineBuilder.builder();
+    public StateMachine<OrderState, OrderState> stateMachine(StateMachineListener<String, String> listener) throws Exception {
+        StateMachineBuilder.Builder<OrderState, OrderState> builder = StateMachineBuilder.builder();
         builder.configureStates().withStates()
-                .initial("PLACED")
-                .states(new HashSet<>(Arrays.asList("PROCESSING", "SENT", "DELIVERED")));
+                .initial(PLACED)
+                .states(new HashSet<>(Arrays.asList(PROCESSING, SENT, DELIVERED)));
 
         builder.configureTransitions().withExternal()
-                .source("PLACED").target("PROCESSING")
-                .event("PROCESS")
+                .source(PLACED).target(PROCESSING)
+                .event(PROCESS)
                 .and()
                 .withExternal()
-                .source("PROCESSING").target("SENT")
-                .event("SEND")
+                .source(PROCESSING).target(SENT)
+                .event(SEND)
                 .and()
                 .withExternal()
-                .source("SENT").target("DELIVERED")
-                .event("DELIVER");
+                .source(SENT).target(DELIVERED)
+                .event(DELIVER);
 
 
         StateMachine<String, String> stateMachine = builder.build();

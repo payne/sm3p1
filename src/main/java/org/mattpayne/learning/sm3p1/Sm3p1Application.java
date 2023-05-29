@@ -17,6 +17,7 @@ import org.springframework.statemachine.recipes.persist.PersistStateMachineHandl
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.statemachine.state.State;
 
+import static org.mattpayne.learning.sm3p1.OrderState.*;
 
 @SpringBootApplication
 public class Sm3p1Application implements CommandLineRunner {
@@ -58,16 +59,16 @@ public class Sm3p1Application implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setState("PROCESS");
+        orderDTO.setState(PROCESS);
         Long id = orderService.create(orderDTO);
         orderDTO = orderService.get(id);
-        persist.change(id, "PROCESS");
+        persist.change(id, PROCESS);
         String msg = persist.listDbEntries();
         System.out.println("Msg from persist.listDbEntries(): " + msg);
         State<String, String> currentState = stateMachine.getState();
         System.out.println("Current state: " + currentState.getId());
 
-        persist.change(id, "SEND");
+        persist.change(id, SEND);
         System.out.println(persist.listDbEntries());
                 currentState = stateMachine.getState();
         System.out.println("Current state: " + currentState.getId());
