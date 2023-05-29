@@ -53,6 +53,7 @@ public class Sm3p1Application implements CommandLineRunner {
     public static void main(final String[] args) {
         SpringApplication.run(Sm3p1Application.class, args);
     }
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -62,7 +63,7 @@ public class Sm3p1Application implements CommandLineRunner {
         orderDTO = orderService.get(id);
         persist.change(id, "PROCESS");
         String msg = persist.listDbEntries();
-        System.out.println(msg);
+        System.out.println("Msg from persist.listDbEntries(): " + msg);
         State<String, String> currentState = stateMachine.getState();
         System.out.println("Current state: " + currentState.getId());
 
@@ -71,30 +72,6 @@ public class Sm3p1Application implements CommandLineRunner {
                 currentState = stateMachine.getState();
         System.out.println("Current state: " + currentState.getId());
     }
-        public void runOLD(String... args) throws Exception {
-
-        stateMachine.start();
-        stateMachine.sendEvent("PROCESS");
-        stateMachine.sendEvent("SEND");
-        stateMachine.sendEvent("DELIVER");
-
-        State<String, String> currentState = stateMachine.getState();
-        System.out.println("Current state: " + currentState.getId());
-        persist.listDbEntries();
-
-
-    }
-   public void runOLDer(String... args) throws Exception {
-        stateMachine.start();
-        stateMachine.sendEvent("PROCESS");
-        stateMachine.sendEvent("SEND");
-        stateMachine.sendEvent("DELIVER");
-
-        State<String, String> currentState = stateMachine.getState();
-        System.out.println("Current state: " + currentState.getId());
-
-        stateMachine.stop();
-
-    }
+    
 
 }
