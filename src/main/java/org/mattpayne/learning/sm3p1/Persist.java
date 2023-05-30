@@ -61,18 +61,20 @@ public class Persist {
         return buf.toString();
     }
 
-    public void change(Long order, String event) {
+    public void change(Long order, OrderState event) {
         OrderDTO o = orderService.get(order);
         handler.handleEventWithStateReactively(MessageBuilder
-                        .withPayload(event).setHeader("order", order).build(), o.getState())
+                        .withPayload(event.toString()).setHeader("order", order).build(), 
+                                     o.getState().toString())
                 .subscribe();
     }
 
     private class LocalPersistStateChangeListener implements PersistStateChangeListener {
 
         @Override
-        public void onPersist(State<String, String> state, Message<String> message,
-                              Transition<String, String> transition, StateMachine<String, String> stateMachine) {
+        public void onPersist(State<OrderState, OrderState> state, Message<String> message,
+                              Transition<OrderState, OrderState> transition, 
+                              StateMachine<OrderState, OrderState> stateMachine) {
             if (message != null && message.getHeaders().containsKey("order")) {
                 Long orderId = message.getHeaders().get("order", Long.class);
                 OrderDTO order = new OrderDTO(orderId, state.getId());

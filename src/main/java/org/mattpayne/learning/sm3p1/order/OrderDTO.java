@@ -1,5 +1,6 @@
 package org.mattpayne.learning.sm3p1.order;
 
+import org.mattpayne.learning.sm3p1.OrderState;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -16,6 +17,6 @@ public class OrderDTO {
 
     @NotNull
     @Size(max = 255)
-    private String state;
+    private OrderState state;
 
 }
